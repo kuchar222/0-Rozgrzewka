@@ -1,0 +1,4 @@
+/.pytest_cache
+/.vscode
+/lotek_test.py
+/__pycache__
