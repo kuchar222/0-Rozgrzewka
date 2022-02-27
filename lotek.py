@@ -67,90 +67,87 @@ def dodaj_liczbe_do_wylosowanych(wylosowana_liczba, liczby_wylosowane):
 
     Args:
         wylosowana_liczba (int): liczba wylosowana
-        wylosowane_liczby (set): zbiór liczb wylosowanych
+        liczby_wylosowane (set): zbiór liczb wylosowanych
     Returns:
         set: zbiór liczb wylosowanych po dodaniu kolejnej liczby
     """
     liczby_wylosowane.add(wylosowana_liczba)
     return liczby_wylosowane
 
-def wylosuj_liczby(liczby_w_maszynie_losujacej, wylosowane_liczby, ilosc_losowanych_liczb=6):
+def wylosuj_liczby(liczby_w_maszynie_losujacej, ilosc_losowanych_liczb=6):
     """losuje zadaną ilość liczb tak jak w TV
 
     Args:
+        liczby_w_maszynie_losującej (set): zbiór liczb,
+        z których dokonuje się losowania kolejnych liczb
+
         ilosc_losowanych_liczb (int, optional): liczba losowanych liczb (domyślnie 6)
     Returns:
         set: zbiór wylosowanych liczb
     """
+    liczby_wylosowane = set()
     i = 0
     while i < ilosc_losowanych_liczb:
         wylosowana_liczba, liczby_w_maszynie_losujacej = losuj_liczbe(liczby_w_maszynie_losujacej)
-        wylosowane_liczby = dodaj_liczbe_do_wylosowanych(wylosowana_liczba, wylosowane_liczby)
+        liczby_wylosowane = dodaj_liczbe_do_wylosowanych(wylosowana_liczba, liczby_wylosowane)
         i += 1
 
-    return wylosowane_liczby
+    return liczby_wylosowane
 
-def sprawdz_liczbe_trafien(wylosowane_liczby, moje_liczby):
+def sprawdz_liczbe_trafien(liczby_po_losowaniu, podane_liczby):
     """zwraca liczbę trafień po losowaniu liczb
 
     Args:
-        wylosowane_liczby (set): zbiór liczb wylosowanych
-        moje_liczby (set): zbiór wybranych liczb
+        liczby_po_losowaniu (set): zbiór liczb wylosowanych
+        podane_liczby (set): zbiór wybranych liczb
     Returns:
         int: ilość trafionych liczb
     """
-    liczba_trafien = wylosowane_liczby.intersection(moje_liczby)
+    liczba_trafien = liczby_po_losowaniu.intersection(podane_liczby)
     return len(liczba_trafien)
 
-def oblicz_wartosc_losow(liczba_losow):
+def oblicz_wartosc_losow():
     """wylicza zainwestowane środki na zakup losów
 
-    Args:
-        liczba_losow (int): liczba kupionych losow
-        CENA_LOSU (int): cena jednego losu
     Returns:
         int: calkowite koszty zakupu losów
     """
-    return liczba_losow*CENA_LOSU
+    return LICZBA_PROB*CENA_LOSU
 
-def oblicz_wiek(wiek, liczba_losowan):
+def oblicz_wiek(wiek_gracza):
     """oblicza wiek gracza w momencie wygrania przy założeniu,
     że kupowano trzy los na tygodniowo (156 losów w roku)
 
     Args:
         wiek (int): wiek gracza w latach podczas rozpoczęcia gry w lotka
-        liczba_losowan (int): całkowita liczba losowań (3 losowania na tydzień) do wygranej
     Returns:
         int:wiek gracza w latach w momencie wygrania
     """
-    wiek_zwyciezcy = int(wiek + liczba_losowan/156)
-    return wiek_zwyciezcy
+    wiek_w_chwili_zwyciestwa = int(wiek_gracza + LICZBA_PROB/156)
+    return wiek_w_chwili_zwyciestwa
 
-def oblicz_wygrana(TRAFIONO_5, TRAFIONO_4, TRAFIONO_3):
+def oblicz_wygrana():
     """oblicza całkowitą wygraną za wszystkie trafienia do momentu trafnienia szóstki
 
-    Args:
-        TRAFIONO_5 (int): liczba trafionych piątek
-        TRAFIONO_4 (int): liczba trafionych czwórek
-        TRAFIONO_3 (int): liczba trafionych trójek
     Returns:
         int: całkowita wartość wygranej
     """
-    wygrana = WYGRANA_SZOSTKA + WYGRANA_PIATKA*TRAFIONO_5 + WYGRANA_CZWORKA*TRAFIONO_4 + WYGRANA_TROJKA*TRAFIONO_3
+    wygrana = WYGRANA_SZOSTKA + WYGRANA_PIATKA*TRAFIONO_5 + WYGRANA_CZWORKA*TRAFIONO_4 \
+        + WYGRANA_TROJKA*TRAFIONO_3
     return wygrana
 
-def podaj_czas_liczenia(start, koniec):
+def podaj_czas_liczenia(czas_start, czas_koniec):
     """oblicza całkowity czas obliczania liczby losowań
 
     Args:
-        start (datetime): start obliczeń
-        koniec (datetime): koniec obliczeń
+        czas_start (datetime): start obliczeń
+        czas_koniec (datetime): koniec obliczeń
     Returns:
         str: czas obliczania w formacie H:MM:SS
     """
-    return str(koniec - start)
+    return str(czas_koniec - czas_start)
 
-def podaj_podsumowanie(LICZBA_PROB, TRAFIONO_5, TRAFIONO_4, TRAFIONO_3, czas):
+def podaj_podsumowanie():
     """podaje podsumowanie obliczeń:
     liczbę losowań
     liczbę trafień: piątek, czwórek, trójek
@@ -158,13 +155,6 @@ def podaj_podsumowanie(LICZBA_PROB, TRAFIONO_5, TRAFIONO_4, TRAFIONO_3, czas):
     poniesione koszty
     czas obliczania
     wiek w chwili wygranej
-
-    Args:
-        LICZBA_PROB (int): całkowita liczba losowań
-        TRAFIONO_5 (int): liczba trafionych piątek
-        TRAFIONO_4 (int): liczba trafionych czwórek
-        TRAFIONO_3 (int): liczba trafionych trójek
-        czas (str): całkowity czas obliczania
     """
     print('---'*10)
     print(f'{Fore.YELLOW}BRAWO udało się trafić szóstkę po {LICZBA_PROB:,} losowaniach')
@@ -173,10 +163,11 @@ def podaj_podsumowanie(LICZBA_PROB, TRAFIONO_5, TRAFIONO_4, TRAFIONO_3, czas):
     print(f'czwórek: {TRAFIONO_4:,}')
     print(f'trójek:  {TRAFIONO_3:,}')
     print('---'*10)
-    wygrana = oblicz_wygrana(TRAFIONO_5, TRAFIONO_4, TRAFIONO_3)
-    wydano = oblicz_wartosc_losow(LICZBA_PROB)
+    wygrana = oblicz_wygrana()
+    wydano = oblicz_wartosc_losow()
     print(f'{Fore.BLUE}Łącznie wygrałeś {wygrana:,}zł, a wydałeś na losy {wydano:,}zł')
-    print(f'Twój komputer wykonał te obliczenia w {czas}, a Ty miałbyś {oblicz_wiek(wiek, LICZBA_PROB):,} lat w dniu wygranej')
+    print(f'Twój komputer wykonał te obliczenia w {CZAS}, a Ty miałbyś {oblicz_wiek(wiek):,}\
+         lat w dniu wygranej')
     print('Chyba trzeba brać się do kodowania, a nie czekać na wygraną :)')
     print()
 
@@ -203,7 +194,7 @@ if __name__ == "__main__":
         trafienia = sprawdz_liczbe_trafien(wylosowane_liczby, moje_liczby)
         if trafienia == 6:
             CZAS = podaj_czas_liczenia(start, datetime.now())
-            podaj_podsumowanie(LICZBA_PROB, TRAFIONO_5, TRAFIONO_4, TRAFIONO_3, CZAS)
+            podaj_podsumowanie()
             break
         if trafienia == 5:
             if TRAFIONO_5 == 0:
